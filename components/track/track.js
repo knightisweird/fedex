@@ -1,7 +1,8 @@
 "use client"; // for client-side rendering in Next.js
 
 import { useState } from "react";
-import html2pdf from "html2pdf.js";
+import dynamic from "next/dynamic";
+const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
 
 // Fetch data from Contentful
 const fetchOrderData = async (orderId) => {
@@ -58,20 +59,33 @@ const Track = () => {
   };
 
   const downloadPDF = () => {
-    const element = document.getElementById("pdf-content"); // Get the content to be printed
+    if (!orderInfo) {
+      console.error("Order information is not available.");
+      return;
+    }
 
-    // Options for the PDF
+    const element = document.getElementById("pdf-content");
+
+    // Check if the element exists before proceeding
+    if (!element) {
+      console.error("PDF content element not found.");
+      return;
+    }
+
     const options = {
-      margin:       1,
-      filename:     `order_${orderInfo.orderId}.pdf`,
-      html2canvas:  { scale: 2 },
-      jsPDF:        { unit: "in", format: "letter", orientation: "portrait" },
+      margin: 1,
+      filename: `order_${orderInfo.orderId}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
     html2pdf()
       .from(element)
       .set(options)
-      .save(); // Save the PDF
+      .save()
+      .catch((error) => {
+        console.error("Error generating PDF:", error);
+      });
   };
 
   return (
@@ -134,8 +148,17 @@ const Track = () => {
                   <div className="flex flex-col items-center mr-4">
                     <div className="w-1 bg-purple-600 h-16 rounded-t"></div>
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-purple-600 text-white">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V7a1 1 0 112 0v2a1 1 0 11-2 0zm0 4a1 1 0 112 0v-2a1 1 0 11-2 0v2z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V7a1 1 0 112 0v2a1 1 0 11-2 0zm0 4a1 1 0 112 0v-2a1 1 0 11-2 0v2z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </div>
                     <div className="w-1 bg-purple-600 h-16 rounded-b"></div>
@@ -146,11 +169,22 @@ const Track = () => {
                       <p className="text-xl font-bold">New York</p>
                     </div>
                     <div className="mb-4">
-                      <h2 className="text-gray-500 font-semibold">WE HAVE YOUR PACKAGE</h2>
+                      <h2 className="text-gray-500 font-semibold">
+                        WE HAVE YOUR PACKAGE
+                      </h2>
                     </div>
                     <div className="bg-gray-200 rounded-full p-4 flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-600 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V7a1 1 0 112 0v2a1 1 0 11-2 0zm0 4a1 1 0 112 0v-2a1 1 0 11-2 0v2z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-purple-600 mr-2"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V7a1 1 0 112 0v2a1 1 0 11-2 0zm0 4a1 1 0 112 0v-2a1 1 0 11-2 0v2z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                       <p className="font-semibold text-gray-700">ON THE WAY</p>
                     </div>
