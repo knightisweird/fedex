@@ -1,8 +1,6 @@
-"use client"; // for client-side rendering in Next.js
-
+'use client';
 import { useState } from "react";
-import dynamic from "next/dynamic";
-const html2pdf = dynamic(() => import("html2pdf.js"), { ssr: false });
+import html2pdf from "html2pdf.js"; // Directly import html2pdf.js
 
 // Fetch data from Contentful
 const fetchOrderData = async (orderId) => {
@@ -58,7 +56,7 @@ const Track = () => {
     }
   };
 
-  const downloadPDF = async () => {
+  const downloadPDF = () => {
     if (!orderInfo) {
       console.error("Order information is not available.");
       return;
@@ -70,24 +68,30 @@ const Track = () => {
       return;
     }
 
-    try {
-      // Wait for the dynamic import to resolve
-      const html2pdfLib = await html2pdf();
-      const options = {
-        margin: 1,
-        filename: `order_${orderInfo.orderId}.pdf`,
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-      };
+    const options = {
+      margin: 1,
+      filename: `order_${orderInfo.orderId}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
 
-      html2pdfLib()
-        .from(element)
-        .set(options)
-        .save();
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
+    // Generate the PDF
+    html2pdf()
+      .from(element)
+      .set(options)
+      .save()
+      .catch(error => {
+        console.error("Error generating PDF:", error);
+      });
   };
+
+  const calculateScheduledDelivery = (orderDate) => {
+    const date = new Date(orderDate);
+    date.setDate(date.getDate() + 7);
+    return date;
+  };
+
+  const scheduledDate = orderInfo ? calculateScheduledDelivery(orderInfo.orderDate) : null;
 
   return (
     <div className="max-w-[1200px] mx-auto p-6 py-[50px] md:py-[100px] text-center">
@@ -122,12 +126,20 @@ const Track = () => {
 
       {orderInfo && (
         <div id="pdf-content" style={{ marginTop: "20px" }}>
-          <div className="flex justify-between bg-gray-100 py-6 px-4">
+          <div className="flex flex-col items-center md:items-start gap-6 md:flex-row justify-between bg-gray-100 py-6 px-4">
             {/* Scheduled Delivery Section */}
             <div className="scheduled-delivery rounded-md">
               <p className="text-gray-500 font-bold">SCHEDULED DELIVERY DATE</p>
-              <h2 className="text-[40px]">Saturday</h2>
-              <p className="text-[18px]">10/12/24 at 12:00 PM</p>
+              {scheduledDate && (
+                <>
+                  <h2 className="text-[40px]">
+                    {scheduledDate.toLocaleString('en-US', { weekday: 'long' })}
+                  </h2>
+                  <p className="text-[18px]">
+                    {scheduledDate.toLocaleDateString()} at 12:00 PM
+                  </p>
+                </>
+              )}
               <button
                 onClick={downloadPDF}
                 className="mt-3 p-2 bg-green-500 text-white rounded-md"
