@@ -58,46 +58,47 @@ const Track = () => {
     }
   };
 
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     if (!orderInfo) {
       console.error("Order information is not available.");
       return;
     }
 
     const element = document.getElementById("pdf-content");
-
-    // Check if the element exists before proceeding
     if (!element) {
       console.error("PDF content element not found.");
       return;
     }
 
-    const options = {
-      margin: 1,
-      filename: `order_${orderInfo.orderId}.pdf`,
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
+    try {
+      // Wait for the dynamic import to resolve
+      const html2pdfLib = await html2pdf();
+      const options = {
+        margin: 1,
+        filename: `order_${orderInfo.orderId}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      };
 
-    html2pdf()
-      .from(element)
-      .set(options)
-      .save()
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
+      html2pdfLib()
+        .from(element)
+        .set(options)
+        .save();
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto p-6 py-[100px] text-center">
-      <h1 className="text-[24px] md:text-[28px] my-3">Track Your Order</h1>
+    <div className="max-w-[1200px] mx-auto p-6 py-[50px] md:py-[100px] text-center">
+      <h1 className="uppercase text-black text-[24px] md:text-[32px] my-3">Track Your Order</h1>
 
       {!orderInfo && (
         <form
           onSubmit={handleSearch}
           className="w-full max-w-[600px] mx-auto flex flex-col items-center"
         >
-          <label htmlFor="trackingId" className="text-center mb-2">
+          <label htmlFor="trackingId" className="text-[#ff6200] text-center text-[20px] mb-2">
             Enter Tracking ID:
           </label>
           <input
@@ -106,11 +107,11 @@ const Track = () => {
             value={orderId}
             onChange={(e) => setOrderId(e.target.value)}
             required
-            className="w-full p-2 my-3 block border-[1px] md:max-w-[70%]"
+            className="w-full p-3 my-3 block rounded-[4px] border-[1px] border-black md:max-w-[80%]"
           />
           <button
             type="submit"
-            className="p-3 rounded-md bg-[#ff6200] text-white"
+            className="w-[50%] md:w-[30%] mt-3 p-3 rounded-[4px] bg-[#ff6200] hover:bg-black text-white"
           >
             Track Order
           </button>
@@ -166,7 +167,7 @@ const Track = () => {
                   <div className="flex-1">
                     <div className="mb-4">
                       <h2 className="text-gray-500 font-semibold">FROM</h2>
-                      <p className="text-xl font-bold">New York</p>
+                      <p className="text-xl font-bold">{orderInfo.location}</p>
                     </div>
                     <div className="mb-4">
                       <h2 className="text-gray-500 font-semibold">

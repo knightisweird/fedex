@@ -18,11 +18,11 @@ const VerticalCard = ({title, content, cover, cta}) => {
 
       {/* Left Section - Text */}
       <div className="p-4">
-        <h2 className="text-[20px] font-medium">{title}</h2>
+        <h2 className="uppercase text-[#1b1b1b] text-[20px] font-medium">{title}</h2>
         <p className="text-gray-600 py-4">
           {content}
         </p>
-        <button className="text-[#007AB7] font-semibold">
+        <button className="uppercase text-[#ff6200] font-semibold">
           {cta}
         </button>
       </div>

@@ -5,6 +5,7 @@ import icon2 from "@/assets/icon2.png";
 import icon3 from "@/assets/icon3.png";
 import icon4 from "@/assets/icon4.png";
 import sampleImage from "@/assets/hrimage.jpg";
+import fedfifty from "@/assets/fedex50.jpg";
 import item1 from "@/assets/item1.jpg";
 import item2 from "@/assets/item2.webp";
 import item3 from "@/assets/item3.webp";
@@ -14,38 +15,38 @@ import VerticalCard from "./cards/vertical";
 
 const PromoSection = () => {
   return (
-    <section className="py-12 px-4 md:px-16 lg:px-32">
+    <section className="py-8 px-4 md:px-16 lg:px-32">
       {/* Container */}
       <div className="max-w-[1000px] mx-auto">
         {/* Main content */}
-        <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-4">
+        <div className="flex flex-col md:flex-row justify-between gap-[50px] md:gap-[40px]">
           <div className="flex flex-col items-center justify-center text-center">
             <Image src={icon1} width={80} height={80} />
-            <h3 className="text-[18px] text-[#007AB7] font-bold mt-4">
+            <h3 className="uppercase text-[18px] text-[#1b1b1b] font-semibold mt-4">
               Drop off a package
             </h3>
           </div>
           <div className="flex flex-col items-center justify-center text-center">
             <Image src={icon2} width={80} height={80} />
-            <h3 className="text-[18px] text-[#007AB7] font-bold mt-4">
+            <h3 className="uppercase text-[18px] text-[#1b1b1b] font-semibold mt-4">
               Redirect a package
             </h3>
           </div>
           <div className="flex flex-col items-center justify-center text-center">
             <Image src={icon1} width={80} height={80} />
-            <h3 className="text-[18px] text-[#007AB7] font-bold mt-4">
+            <h3 className="uppercase text-[18px] text-[#1b1b1b] font-semibold mt-4">
               Store hours & services
             </h3>
           </div>
           <div className="flex flex-col items-center justify-center text-center">
             <Image src={icon3} width={80} height={80} />
-            <h3 className="text-[18px] text-[#007AB7] font-bold mt-4">
+            <h3 className="uppercase text-[18px] text-[#1b1b1b] font-semibold mt-4">
               Service alerts
             </h3>
           </div>
           <div className="flex flex-col items-center justify-center text-center">
             <Image src={icon4} width={80} height={80} />
-            <h3 className="text-[18px] text-[#007AB7] font-bold mt-4">
+            <h3 className="uppercase text-[18px] text-[#1b1b1b] font-semibold mt-4">
               Return a package
             </h3>
           </div>
@@ -61,7 +62,7 @@ FedEx One Rate.**"
           />
         </div>
         <div>
-          <h2 className="font text-[28px] text-[48px] text-[#333] text-center">
+          <h2 className="font text-[28px] md:text-[42px] text-[#1b1b1b] text-center">
             The holidays are almost here. Deliver more happy with fast, reliable
             shipping.
           </h2>
@@ -121,6 +122,14 @@ FedEx One Rate.**"
             cover={item3}
           />
         </div>
+      </div>
+      <div className="flex flex-col justify-center items-center gap-5 mb-[40px]">
+        <Image src={fedfifty} />
+        <h5 className="text-[#1b1b1b] text-center text-[26px] md:text-[36px]">Celebrating 50 years of driving what’s next</h5>
+        <p className="w-[90%] md:w-[70%] text-center text-[#333] text-[16px] md:text-[20px]">
+          FedEx is turning 50 in April. Get to know the team who create,
+          innovate, and connect you with the people and products you love.
+        </p>
       </div>
     </section>
   );
