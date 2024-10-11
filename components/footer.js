@@ -1,17 +1,17 @@
-import React from 'react'
-import Image from 'next/image'
-import logo from '@/assets/logo.png'
-import search from '@/assets/search.png'
+import React from "react";
+import Image from "next/image";
 
 const Footer = () => {
   return (
     <footer className="w-full bg-[#4d148c] p-6">
-      <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-        <Image src={logo} width={80} height={60} />
-        <Image src={search} width={30} height={30} className="cursor-pointer" />
+      <div className="max-w-[1200px] mx-auto flex items-center justify-between text-white">
+        <p>© FedEx 1995-2024</p>
+        <div className="flex items-center justify-end">
+          Site Map | Terms of Use | Privacy & Security | Ad Choices
+        </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;
