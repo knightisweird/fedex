@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import Image from "next/image";
 import MarqueeText from "@/components/marquee";
 import Track from "@/components/track/track";
-import info from "@/assets/question.svg";
+import info from "@/assets/quest.svg";
 
 export default function Home() {
   return (
