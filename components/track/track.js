@@ -1,5 +1,11 @@
-'use client';
+"use client";
 import { useState } from "react";
+import Image from "next/image";
+import overview from "@/assets/location.svg";
+import ship from "@/assets/shipping.svg";
+import pack from "@/assets/package.svg";
+import download from "@/assets/down.svg";
+import right from "@/assets/right.svg";
 import html2pdf from "html2pdf.js"; // Directly import html2pdf.js
 
 // Fetch data from Contentful
@@ -12,6 +18,14 @@ const fetchOrderData = async (orderId) => {
         customerName
         location
         orderDate
+        dateOfTransit
+        deliveryDate
+        service
+        terms
+        weight
+        dimension
+        totalPieces
+        packaging
       }
     }
   }`;
@@ -80,7 +94,7 @@ const Track = () => {
       .from(element)
       .set(options)
       .save()
-      .catch(error => {
+      .catch((error) => {
         console.error("Error generating PDF:", error);
       });
   };
@@ -91,18 +105,25 @@ const Track = () => {
     return date;
   };
 
-  const scheduledDate = orderInfo ? calculateScheduledDelivery(orderInfo.orderDate) : null;
+  const scheduledDate = orderInfo
+    ? calculateScheduledDelivery(orderInfo.orderDate)
+    : null;
 
   return (
-    <div className="max-w-[1200px] mx-auto p-6 py-[50px] md:py-[100px] text-center">
-      <h1 className="uppercase text-black text-[24px] md:text-[32px] my-3">Track Your Order</h1>
+    <div className="max-w-[1200px] mx-1 md:mx-auto p-6 py-[50px] md:py-[100px] text-center">
+      <h1 className="uppercase text-black text-[24px] md:text-[32px] my-3">
+        Track Your Order
+      </h1>
 
       {!orderInfo && (
         <form
           onSubmit={handleSearch}
           className="w-full max-w-[600px] mx-auto flex flex-col items-center"
         >
-          <label htmlFor="trackingId" className="text-[#ff6200] text-center text-[20px] mb-2">
+          <label
+            htmlFor="trackingId"
+            className="text-[#ff6200] text-center text-[20px] mb-2"
+          >
             Enter Tracking ID:
           </label>
           <input
@@ -126,40 +147,50 @@ const Track = () => {
 
       {orderInfo && (
         <div id="pdf-content" style={{ marginTop: "20px" }}>
-          <div className="flex flex-col items-center md:items-start gap-6 md:flex-row justify-between bg-gray-100 py-6 px-4">
+          <div className="flex flex-col items-start md:items-start gap-6 md:flex-row justify-between py-6 px-0 md:px-4">
             {/* Scheduled Delivery Section */}
-            <div className="scheduled-delivery rounded-md">
-              <p className="text-gray-500 font-bold">SCHEDULED DELIVERY DATE</p>
+            <div className="text-left scheduled-delivery rounded-md">
+              <p className="text-[#1b1b1b1] font-bold text-left">
+                SCHEDULED DELIVERY DATE
+              </p>
               {scheduledDate && (
                 <>
-                  <h2 className="text-[40px]">
-                    {scheduledDate.toLocaleString('en-US', { weekday: 'long' })}
-                  </h2>
-                  <p className="text-[18px]">
+                  <p className="text-[40px] text-grey text-left">
+                    {scheduledDate.toLocaleString("en-US", { weekday: "long" })}
+                  </p>
+                  <p className="text-[18px] text-left">
                     {scheduledDate.toLocaleDateString()} at 12:00 PM
                   </p>
                 </>
               )}
               <button
                 onClick={downloadPDF}
-                className="mt-3 p-2 bg-green-500 text-white rounded-md"
+                className="flex items-center mt-3 p-2 py-1 text-[333] border border-[#333] rounded-[4px] text-left gap-2"
               >
+                <Image src={download} width={18} height={18} />
                 Download PDF
               </button>
             </div>
 
             {/* Tracking Details Section */}
             <div className="tracking-info">
-              <h4 className="text-gray-500 font-bold">DELIVERY STATUS</h4>
-              <p className="text-[20px] text-blue-500">{orderInfo.status}</p>
+              <h4 className="text-[#1b1b1b] text-left font-bold">
+                DELIVERY STATUS
+              </h4>
+              <p className="flex items-center gap-2 text-[20px] text-left text-[#4D148C]">
+                {orderInfo.status}
+                <Image src={right} width={20} height={20} />
+              </p>
             </div>
             <div className="tracking-id">
-              <h4 className="text-gray-500 font-bold">TRACKING ID</h4>
-              <p>{orderInfo.orderId}</p>
-              <div className="bg-white rounded-lg shadow-md w-96 p-8">
+              <h4 className="text-[#1b1b1b] text-left font-bold">
+                TRACKING ID
+              </h4>
+              <p className="text-left">{orderInfo.orderId}</p>
+              <div className="bg-white rounded-lg mt-3 p-0 md:p-2">
                 <div className="flex items-center">
                   <div className="flex flex-col items-center mr-4">
-                    <div className="w-1 bg-purple-600 h-16 rounded-t"></div>
+                    <div className="w-2 bg-purple-600 h-16 rounded-t"></div>
                     <div className="w-8 h-8 rounded-full flex items-center justify-center bg-purple-600 text-white">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -178,11 +209,15 @@ const Track = () => {
                   </div>
                   <div className="flex-1">
                     <div className="mb-4">
-                      <h2 className="text-gray-500 font-semibold">FROM</h2>
-                      <p className="text-xl font-bold">{orderInfo.location}</p>
+                      <h2 className="text-gray-500 text-left font-semibold">
+                        FROM
+                      </h2>
+                      <p className="text-xl text-left font-bold">
+                        {orderInfo.location}
+                      </p>
                     </div>
                     <div className="mb-4">
-                      <h2 className="text-gray-500 font-semibold">
+                      <h2 className="text-gray-500 text-left font-semibold">
                         WE HAVE YOUR PACKAGE
                       </h2>
                     </div>
@@ -199,7 +234,9 @@ const Track = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <p className="font-semibold text-gray-700">ON THE WAY</p>
+                      <p className="font-semibold text-left text-gray-700">
+                        ON THE WAY
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -208,9 +245,249 @@ const Track = () => {
           </div>
 
           {/* Shipment Facts */}
-          <div className="shipment-facts bg-gray-100 mt-8 p-6 rounded-md">
-            <h3 className="text-[24px] mb-4 font-bold">Shipment Facts</h3>
-            <div className="shipment-overview">
+          <div className="shipment-facts bg-{#FAFAFA} mt-8  md:p-6 rounded-md">
+            <h3 className="text-[24px] text-left text-[#1b1b1b] mb-4 font-semibold">
+              Shipment Facts
+            </h3>
+            {/* <div className="">
+              <span className="flex items-center gap-2">
+                <Image src={overview} width={45} height={45} />
+                <h6 className="text-[#1b1b1b] text-[22px]">
+                  Shipment Overview
+                </h6>
+              </span>
+              <div className="container mx-auto py-6">
+                <table className="min-w-full bg-gray-100 rounded-lg shadow-md">
+                  <thead>
+                    <tr>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Tracking Number
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Ship Date
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Standard Transit
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Delivered
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.orderId}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {new Date(orderInfo.orderDate).toLocaleDateString()}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {new Date(orderInfo.dateOfTransit).toLocaleDateString()}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {new Date(orderInfo.deliveryDate).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> */}
+
+            <div className="mx-auto mt-10 py-4">
+              <span className="flex items-center gap-2 mb-2">
+                <Image src={overview} width={40} height={40} />
+                <h6 className="text-[#1b1b1b] text-[20px]">
+                  Shipment Overview
+                </h6>
+              </span>
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Tracking number
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.orderId}
+                    </td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Ship date
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {new Date(orderInfo.orderDate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Standard transit
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {new Date(orderInfo.dateOfTransit).toLocaleDateString()}
+                    </td>
+                  </tr>
+                  <tr className="">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      DELIVERED
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {new Date(orderInfo.deliveryDate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Services */}
+            {/* <div className="">
+              <span className="flex items-center gap-2">
+                <Image src={ship} width={45} height={45} />
+                <h6 className="text-[#1b1b1b] text-[22px]">
+                  Shipment Services
+                </h6>
+              </span>
+              <div className="container mx-auto py-6">
+                <table className="min-w-full bg-gray-100 rounded-lg shadow-md">
+                  <thead>
+                    <tr>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Service
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Terms
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.service}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.terms}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> */}
+
+            <div className="mx-auto mt-10 py-4">
+              <span className="flex items-center gap-2 mb-2">
+                <Image src={ship} width={40} height={40} />
+                <h6 className="text-[#1b1b1b] text-[20px]">
+                  Shipment Services
+                </h6>
+              </span>
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Service
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.service}
+                    </td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Terms
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.terms}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {/* Package Details */}
+            {/* <div className="">
+              <span className="flex items-center gap-2">
+                <Image src={pack} width={45} height={45} />
+                <h6 className="text-[#1b1b1b] text-[22px]">Package Details</h6>
+              </span>
+              <div className="container mx-auto py-6">
+                <table className="min-w-full bg-gray-100 rounded-lg shadow-md">
+                  <thead>
+                    <tr>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Weight
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Dimensions
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Total Pieces
+                      </th>
+                      <th className="max-w-[33%] p-4 border-b border-gray-300 bg-[#4d148c] text-white font-bold text-left">
+                        Packaging
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.weight}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.dimension}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.totalPieces}
+                      </td>
+                      <td className="p-4 text-left border-b border-gray-300">
+                        {orderInfo.packaging}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div> */}
+
+            <div className="mx-auto mt-10 py-4">
+              <span className="flex items-center gap-2 mb-2">
+                <Image src={pack} width={40} height={40} />
+                <h6 className="text-[#1b1b1b] text-[20px]">Package Details</h6>
+              </span>
+              <table className="w-full table-auto border-collapse">
+                <tbody>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Weight
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.weight}
+                    </td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Dimension
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.dimension}
+                    </td>
+                  </tr>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Total Pieces
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.totalPieces}
+                    </td>
+                  </tr>
+                  <tr className="">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Packaging
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.packaging}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {/* <div className="shipment-overview">
               <div className="flex justify-between">
                 <p>
                   <strong>Tracking Number:</strong> {orderInfo.orderId}
@@ -228,7 +505,7 @@ const Track = () => {
                   <strong>Delivery Status:</strong> {orderInfo.status}
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
