@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import overview from "@/assets/location.svg";
-import ship from "@/assets/shipping.svg";
+import ship from "@/assets/ship.svg";
 import pack from "@/assets/package.svg";
 import download from "@/assets/down.svg";
 import right from "@/assets/right.svg";
