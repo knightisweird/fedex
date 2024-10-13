@@ -32,6 +32,7 @@ const fetchOrderData = async (orderId) => {
         totalPieces
         packaging
         locationTo
+        itemDescription
       }
     }
   }`;
@@ -498,6 +499,14 @@ const Track = () => {
                     </td>
                     <td className="text-gray-800 text-left p-2">
                       {orderInfo.packaging}
+                    </td>
+                  </tr>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Item Description
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.itemDescription}
                     </td>
                   </tr>
                 </tbody>
