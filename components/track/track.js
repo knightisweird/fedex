@@ -31,7 +31,7 @@ const fetchOrderData = async (orderId) => {
         dimension
         totalPieces
         packaging
-        LocationTo
+        locationTo
       }
     }
   }`;
@@ -348,7 +348,7 @@ const Track = () => {
                       Location To
                     </td>
                     <td className="text-gray-800 text-left p-2">
-                      {orderInfo.LocationTo}
+                      {orderInfo.locationTo}
                     </td>
                   </tr>
                 </tbody>
