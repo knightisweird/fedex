@@ -6,7 +6,12 @@ import ship from "@/assets/ship.svg";
 import pack from "@/assets/package.svg";
 import download from "@/assets/down.svg";
 import right from "@/assets/right.svg";
-import html2pdf from "html2pdf.js"; // Directly import html2pdf.js
+
+let html2pdf;
+if (typeof window !== "undefined") {
+  html2pdf = require("html2pdf.js");
+}
+
 
 // Fetch data from Contentful
 const fetchOrderData = async (orderId) => {
@@ -89,14 +94,16 @@ const Track = () => {
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     };
 
-    // Generate the PDF
-    html2pdf()
-      .from(element)
-      .set(options)
-      .save()
-      .catch((error) => {
-        console.error("Error generating PDF:", error);
-      });
+    // Ensure `html2pdf` is only loaded on the client
+    if (html2pdf) {
+      html2pdf()
+        .from(element)
+        .set(options)
+        .save()
+        .catch((error) => {
+          console.error("Error generating PDF:", error);
+        });
+    }
   };
 
   const calculateScheduledDelivery = (orderDate) => {
@@ -246,7 +253,7 @@ const Track = () => {
 
           {/* Shipment Facts */}
           <div className="shipment-facts bg-{#FAFAFA} mt-8  md:p-6 rounded-md">
-            <h3 className="text-[24px] text-left text-[#1b1b1b] mb-4 font-semibold">
+            <h3 className="text-[24px] text-left text-grey-300 mb-4">
               Shipment Facts
             </h3>
             {/* <div className="">
