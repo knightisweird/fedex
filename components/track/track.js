@@ -31,6 +31,7 @@ const fetchOrderData = async (orderId) => {
         dimension
         totalPieces
         packaging
+        LocationTo
       }
     }
   }`;
@@ -340,6 +341,14 @@ const Track = () => {
                     </td>
                     <td className="text-gray-800 text-left p-2">
                       {new Date(orderInfo.deliveryDate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                  <tr className="bg-[#f2f2f2] border-b">
+                    <td className="uppercase font-semibold text-[#333] text-left text-gray-600 p-2">
+                      Location To
+                    </td>
+                    <td className="text-gray-800 text-left p-2">
+                      {orderInfo.LocationTo}
                     </td>
                   </tr>
                 </tbody>
